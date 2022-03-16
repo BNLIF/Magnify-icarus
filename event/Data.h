@@ -14,7 +14,7 @@ class BadChannels;
 class Data {
 public:
     Data();
-    Data(const char* filename, const char* experiment, const char* frame, int rebin);
+    Data(const char* filename, const char* tpc, const char* frame, int rebin);
 
     virtual ~Data();
 
@@ -26,7 +26,7 @@ public:
     int runNo;
     int subRunNo;
     int eventNo;
-    std::string expName;
+    std::string tpcNo;
 
 private:
     void load_waveform(const char* name, const char* title="", double scale=1);

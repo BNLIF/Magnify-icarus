@@ -31,7 +31,7 @@
 using namespace std;
 
 
-GuiController::GuiController(const TGWindow *p, int w, int h, const char* fn, const char* experiment, const char* frame, int rebin)
+GuiController::GuiController(const TGWindow *p, int w, int h, const char* fn, const char* tpc, const char* frame, int rebin)
 {
     mw = new MainWindow(p, w, h);
     vw = mw->fViewWindow;
@@ -45,7 +45,7 @@ GuiController::GuiController(const TGWindow *p, int w, int h, const char* fn, co
     else {
         filename = fn;
     }
-    data = new Data(filename.Data(), experiment, frame, rebin);
+    data = new Data(filename.Data(), tpc, frame, rebin);
     mw->SetWindowName(TString::Format("Magnify: run %i, sub-run %i, event %i",
         data->runNo, data->subRunNo, data->eventNo));
 

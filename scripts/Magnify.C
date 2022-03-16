@@ -1,5 +1,5 @@
-void Magnify(const char* filename=0, const char* experiment="uboone", const char* frame="decon", int rebin=4);
-void Magnify(const char* filename, const char* experiment, const char* frame, int rebin)
+void Magnify(const char* filename=0, const char* tpc="", const char* frame="decon", int rebin=4);
+void Magnify(const char* filename, const char* tpc, const char* frame, int rebin)
 {
     // gROOT->Reset();
     // gROOT->ProcessLine(".x loadClasses.C" );
@@ -9,7 +9,7 @@ void Magnify(const char* filename, const char* experiment, const char* frame, in
         1600,
         900,
         filename,
-        experiment,
+        tpc,
         frame,
         rebin
     );

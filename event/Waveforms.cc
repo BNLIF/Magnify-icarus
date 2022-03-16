@@ -64,7 +64,7 @@ Waveforms::Waveforms(TH2F *h, BadChannels* v, TString name, TString title, doubl
     }
 
     SetZRange(10, 20);
-    SetThreshold(15);
+    SetThreshold(12);
 }
 
 Waveforms::~Waveforms()

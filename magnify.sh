@@ -8,12 +8,12 @@ if [[ "$rootfile" =~ :// ]] ; then
 else
     rootfile=$(readlink -f "$rootfile")
 fi
-experiment="${1:-uboone}" ; shift
+tpc="${1:-110}" ; shift
 frame="${1:-decon}"
 startdir=$(pwd)
 rebin="${2:-1}"
 
-echo "Loading | experiment \"$experiment\" | frame \"$frame\" | rebin \"$rebin\" |"
+echo "Loading | tpc \"$tpc\" | frame \"$frame\" | rebin \"$rebin\" |"
 
 cd $magnify_source/scripts
 
@@ -21,4 +21,4 @@ cd $magnify_source/scripts
 # echo $frame
 # echo $rebin
 
-root -l loadClasses.C Magnify.C'("'"$rootfile"'", "'"$experiment"'", "'"$frame"'", '$rebin')'
+root -l loadClasses.C Magnify.C'("'"$rootfile"'", "'"$tpc"'", "'"$frame"'", '$rebin')'

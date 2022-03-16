@@ -22,7 +22,7 @@ using namespace std;
 Data::Data()
 {}
 
-Data::Data(const char* filename, const char* experiment, const char* frame, int rebin)
+Data::Data(const char* filename, const char* tpc, const char* frame, int rebin)
 {
     rootFile = TFile::Open(filename);
     if (!rootFile) {
@@ -30,28 +30,40 @@ Data::Data(const char* filename, const char* experiment, const char* frame, int 
     	msg += filename;
     	throw runtime_error(msg.c_str());
     }
-    expName = experiment;  // so far no special settings for different experiments.
+    tpcNo = tpc;
 
     bad_channels = new BadChannels( (TTree*)rootFile->Get("T_bad") );
     // load_badchannels();
     load_runinfo();
 
-    load_waveform("hu_raw", "U Plane (Denoised)");
-    load_waveform("hv_raw", "V Plane (Denoised)");
-    load_waveform("hw_raw", "W Plane (Denoised)");
+    load_waveform(Form("hu_raw%s", tpcNo.c_str()), "U Plane (Denoised)");
+    load_waveform(Form("hv_raw%s", tpcNo.c_str()), "V Plane (Denoised)");
+    load_waveform(Form("hw_raw%s", tpcNo.c_str()), "W Plane (Denoised)");
 
     for (int iplane=0; iplane<3; ++iplane) {
-        load_waveform(Form("h%c_%s", 'u'+iplane, frame),
-                      Form("%c Plane (Deconvoluted)", 'U'+iplane), 1./(500.*rebin/4.0));
+        TString tpcRealNo = tpcNo;
+        if (iplane == 1) {
+            if (tpcRealNo == "120") {tpcRealNo = "110";}
+            else if (tpcRealNo == "121") {tpcRealNo = "111";}
+            else if (tpcRealNo == "122") {tpcRealNo = "112";}
+            else if (tpcRealNo == "123") {tpcRealNo = "113";}
+        }
+        else if (iplane == 2) {
+            if (tpcRealNo == "110") {tpcRealNo = "120";}
+            else if (tpcRealNo == "111") {tpcRealNo = "121";}
+            else if (tpcRealNo == "112") {tpcRealNo = "122";}
+            else if (tpcRealNo == "113") {tpcRealNo = "123";}
+        }
+
+        load_waveform(Form("h%c_%s%s", 'u'+iplane, frame, tpcRealNo.Data()),
+                      Form("%c Plane (Deconvoluted)", 'U'+iplane), 1./(150.*rebin));
+        load_threshold(Form("h%c_threshold%s", 'u'+iplane, tpcRealNo.Data()));
     }
 
-    load_rawwaveform("hu_orig", "hu_baseline");
-    load_rawwaveform("hv_orig", "hv_baseline");
-    load_rawwaveform("hw_orig", "hw_baseline");
+    load_rawwaveform(Form("hu_orig%s", tpcNo.c_str()), "hu_baseline");
+    load_rawwaveform(Form("hv_orig%s", tpcNo.c_str()), "hv_baseline");
+    load_rawwaveform(Form("hw_orig%s", tpcNo.c_str()), "hw_baseline");
 
-    load_threshold("hu_threshold");
-    load_threshold("hv_threshold");
-    load_threshold("hw_threshold");
 }
 
 void Data::load_runinfo()
